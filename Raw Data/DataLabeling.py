@@ -3,7 +3,7 @@ import numpy as np
 import os
 import glob
 
-path = 'C:\\Users\\Keshav\\OneDrive\\School\\Winter\\390\\Project\\Github\\ELEC-390-Project\\Raw Data'
+path = os.path.dirname(os.path.realpath(__file__))
 extension = 'csv'
 result = glob.glob(path + "\\**\\*.csv")
 
