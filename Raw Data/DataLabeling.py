@@ -14,17 +14,17 @@ def label(path, lenpath):
     
     for i in range(len(data['Time (s)'])):
         if data['Time (s)'][i] < 30:
-            Activity.append('Standing')
+            Activity.append(1)
         elif data['Time (s)'][i] >= 30 and data['Time (s)'][i] < 35:
-            Activity.append('Transition')
+            Activity.append(0)
         elif data['Time (s)'][i] >= 35 and data['Time (s)'][i] < 65:
-            Activity.append('Walking')
+            Activity.append(2)
         elif data['Time (s)'][i] >= 65 and data['Time (s)'][i] < 70:
-            Activity.append('Transition')
+            Activity.append(0)
         elif data['Time (s)'][i] >= 70 and data['Time (s)'][i] < 100:
-            Activity.append('Jumping')
+            Activity.append(3)
         else:
-            Activity.append('Transition')
+            Activity.append(0)
     data['Activity'] = Activity
     
     data.to_csv(path[:path.find('\\',lenpath+1)-len(path)] + '\\Raw Data Labeled.csv')
