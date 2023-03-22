@@ -1,6 +1,8 @@
 import pandas as pd
 import h5py
 import random
+from sklearn.model_selection import train_test_split
+
 # read data
 Ericback = pd.read_csv('Eric-back.csv')
 Ericfront = pd.read_csv('Eric-front.csv')
@@ -42,7 +44,7 @@ Mingjieback = toNum(Mingjieback)
 Mingjiefront = toNum(Mingjiefront)
 Mingjiejacket = toNum(Mingjiejacket)
 
-# choose indexes
+# create 5 second chunks and shuffle them
 E_chunks_back = shuffle(Ericback)
 E_chunks_front = shuffle(Ericfront)
 E_chunks_jacket = shuffle(Ericjacket)
@@ -61,8 +63,7 @@ random.shuffle(chunks)
 alldata = pd.concat(chunks, axis=0)
 
 # choose data for train and test
-train_data = alldata[:int(len(alldata)*0.9)]
-test_data = train_data = alldata[int(len(alldata)*0.9):]
+train_data, test_data = train_test_split(alldata, test_size=0.1)
 
 with h5py.File('./alldata.h5', 'w') as hdf:
     G1 = hdf.create_group('Eric')
@@ -77,7 +78,6 @@ with h5py.File('./alldata.h5', 'w') as hdf:
     G3.create_dataset('back', data=Ericback)
     G3.create_dataset('front', data=Ericfront)
     G3.create_dataset('jacket', data=Ericjacket)
-    G41 = hdf.create_group('dataset/train')
-    G41.create_dataset("trainData", data=train_data)
-    G42 = hdf.create_group('dataset/test')
-    G42.create_dataset("testData", data=test_data)
+    G41 = hdf.create_group('dataset')
+    G41.create_dataset("Train", data=train_data)
+    G41.create_dataset("Test", data=test_data)
