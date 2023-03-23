@@ -6,7 +6,6 @@ with h5py.File('alldata.h5', 'r') as hdf:
     train_data = hdf['dataset']['Train']
     column_names = hdf['dataset']['Train'].attrs['column_names']
     train_data_df = pd.DataFrame(train_data, columns=column_names)
-    print(train_data_df.columns)
 
 start = 0
 end = 500
@@ -21,7 +20,8 @@ fig, axes = plt.subplots(3, 3, figsize=(15, 15))
 
 for i, activity in enumerate(activity_data.keys()):
     for j, accel_axis in enumerate(accel_axes):
-        axes[i][j].scatter(activity_data[activity].iloc[start:end]['Time (s)'], activity_data[activity].iloc[start:end][accel_axis])
+        axes[i][j].scatter(activity_data[activity]['Time (s)'], activity_data[activity][accel_axis])
+        #axes[i][j].scatter(activity_data[activity].iloc[start:end]['Time (s)'], activity_data[activity].iloc[start:end][accel_axis])
         axes[i][j].set_title(f"Activity {activity}: {accel_axis}")
 
 plt.tight_layout()
