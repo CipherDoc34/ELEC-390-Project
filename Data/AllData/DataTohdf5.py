@@ -82,3 +82,18 @@ with h5py.File('./alldata.h5', 'w') as hdf:
     G41 = hdf.create_group('dataset')
     G41.create_dataset("Train", data=train_data)
     G41.create_dataset("Test", data=test_data)
+
+    hdf['Eric']['back'].attrs['column_names'] = Ericback.columns.astype(str).tolist()
+    hdf['Eric']['front'].attrs['column_names'] = Ericfront.columns.astype(str).tolist()
+    hdf['Eric']['jacket'].attrs['column_names'] = Ericjacket.columns.astype(str).tolist()
+
+    hdf['Keshav']['back'].attrs['column_names'] = Keshavback.columns.astype(str).tolist()
+    hdf['Keshav']['front'].attrs['column_names'] = Keshavfront.columns.astype(str).tolist()
+    hdf['Keshav']['jacket'].attrs['column_names'] = Keshavjacket.columns.astype(str).tolist()
+
+    hdf['Mingjie']['back'].attrs['column_names'] = Mingjieback.columns.astype(str).tolist()
+    hdf['Mingjie']['front'].attrs['column_names'] = Mingjiefront.columns.astype(str).tolist()
+    hdf['Mingjie']['jacket'].attrs['column_names'] = Mingjiejacket.columns.astype(str).tolist()
+
+    hdf['dataset']['Train'].attrs['column_names'] = train_data.columns.astype(str).tolist()
+    hdf['dataset']['Test'].attrs['column_names'] = test_data.columns.astype(str).tolist()
