@@ -29,8 +29,8 @@ def toNum(df):
     df['Activity'] = activity
     return df
 
-def shuffle(df):
-    lis = [df[i:i+500] for i in range(0, len(df), 500)]
+def shuffle(df, frequency):
+    lis = [df[i:i+frequency] for i in range(0, len(df), frequency)]
     random.shuffle(lis)
     return pd.concat(lis)
 
@@ -46,15 +46,15 @@ def shuffle(df):
 # Mingjiejacket = toNum(Mingjiejacket)
 
 # create 5 second chunks and shuffle them
-E_chunks_back = shuffle(Ericback)
-E_chunks_front = shuffle(Ericfront)
-E_chunks_jacket = shuffle(Ericjacket)
-K_chunks_back = shuffle(Keshavback)
-K_chunks_front = shuffle(Keshavfront)
-K_chunks_jacket = shuffle(Keshavjacket)
-M_chunks_back = shuffle(Mingjieback)
-M_chunks_front = shuffle(Mingjiefront)
-M_chunks_jacket = shuffle(Mingjiejacket)
+E_chunks_back = shuffle(Ericback, 100)
+E_chunks_front = shuffle(Ericfront, 100)
+E_chunks_jacket = shuffle(Ericjacket, 100)
+K_chunks_back = shuffle(Keshavback, 414)
+K_chunks_front = shuffle(Keshavfront, 414)
+K_chunks_jacket = shuffle(Keshavjacket, 414)
+M_chunks_back = shuffle(Mingjieback, 500)
+M_chunks_front = shuffle(Mingjiefront, 500)
+M_chunks_jacket = shuffle(Mingjiejacket, 500)
 
 # combine chunks
 chunks = [E_chunks_back, K_chunks_back, M_chunks_back,
