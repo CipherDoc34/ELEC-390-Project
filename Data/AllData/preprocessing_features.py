@@ -12,8 +12,8 @@ import numpy as np
 class preprocessing_features:
     def __init__(self, X):
         self.X = X
-        self.features = self.preprocessing()
-    def preprocessing(self):
+        self.features = self.features()
+    def features(self):
         X = self.X
         X = X.iloc[:, 1:-1]
         features = pd.DataFrame(columns=['meanX', 'meanY', 'meanZ',
@@ -27,7 +27,7 @@ class preprocessing_features:
                                      'diffX', 'diffY', 'diffZ',
                                      'diffabsX', 'diffabsY', 'diffabsZ',
                                      'varianceX', 'varianceY', 'varianceZ'])
-        window_size = 500
+        window_size = 5
         def difference(x):
             return x.iloc[-1] - x.iloc[0]
         def difference_abs(x):
@@ -60,5 +60,5 @@ class preprocessing_features:
         features = features.dropna()
         return features
 
-with open('preprocessing_features.pkl', 'wb') as file:
+with open('preprocessing_features_bonus.pkl', 'wb') as file:
         pickle.dump(preprocessing_features, file)

@@ -73,8 +73,8 @@ class GUI:
                 colour.append("blue")
             else:
                 colour.append("red")
-        print(labels)
-        print(labels.dtype)
+        # print(labels)
+        # print(labels.dtype)
         x = range(len(labels))
         fig, ax = plt.subplots(figsize=(5,5), dpi=100)
         ax.scatter(x, data.iloc[-len(labels):,1], linewidth=1, c=colour, s=1)
@@ -94,10 +94,14 @@ class GUI:
         if not input_path:
             return
         data = pd.read_csv(input_path)
+        # print(data)
         prediction = model.predict(preprocessing_features(data).features)
         prob = model.predict_proba(preprocessing_features(data).features)
         self.plot(prediction, data)
-        print(prob)
+        data = data.drop(range(499), axis=0)
+        data["prediction"] = prediction
+        data.to_csv(input_path[:-4] + "_prediction.csv", index=False)
+        #print(prob)
         # fig, ax = plt.subplots(figsize=(10,10))
         # ax.plot(prediction, linewidth=5)
         # plt.show()
@@ -105,10 +109,9 @@ class GUI:
 
     # define closing
     def on_closing(self):
-        if messagebox.askyesno(title="Quit?", message="do you really want to quit?"):
+        # if messagebox.askyesno(title="Quit?", message="do you really want to quit?"):
             self.window.destroy()
 
-    # define text
     def message(self):
         messagebox.showinfo("Message", "this app will accept an input file in CSV format "
                                        "and generate a CSV file as the output"
