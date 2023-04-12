@@ -2,26 +2,32 @@ import tkinter as tk
 import os.path
 from tkinter import messagebox
 import pandas as pd
+import numpy as np
 from tkinter import filedialog
-
+import joblib
+import dill as pickle
+import matplotlib.pyplot as plt
+from matplotlib import cm
+from matplotlib.backends.backend_tkagg import (FigureCanvasTkAgg, 
+NavigationToolbar2Tk)
 
 class GUI:
     def __init__(self):
         # create a window
         self.window = tk.Tk()
-        self.window.geometry("500x500")
-        self.window.title("ELEC 390")
+        self.window.geometry("1000x500")
+        self.window.title("ELEC 390 - Project")
 
         # text box
         # self.info = tk.Text(self.window, height=3, font=('Arial', 16))
         # self.info.pack(padx=10, pady=10)
 
         # create label
-        self.label = tk.Label(self.window, text="To start the APP, please choose start", font=('Arial', 18))
+        self.label = tk.Label(self.window, text="To start the app, please choose start", font=('Arial', 18))
         self.label.pack(padx=20, pady=20)
 
         # start button
-        self.btn = tk.Button(self.window, text="start", command=self.start)
+        self.btn = tk.Button(self.window, text="Start", command=self.start)
         self.btn.place(x=225, y=200, height=50, width=50)
 
         # clear button
@@ -33,20 +39,53 @@ class GUI:
 
 
         # create label
-        self.label = tk.Label(self.window, text="Please choose instr to view the instruction", font=('Arial', 18))
+        self.label = tk.Label(self.window, text="Please choose Instructions to view the instruction", font=('Arial', 18))
         self.label.pack(padx=20, pady=20)
 
         # text button
-        self.textbtn = tk.Button(self.window, text="instr", command=self.message)
-        self.textbtn.place(x=225, y=400, height=50, width=50)
-
+        self.textbtn = tk.Button(self.window, text="Instructions", command=self.message)
+        self.textbtn.place(x=215, y=400, height=50, width=70)
+        
         self.window.mainloop()
 
     # define read path
     def file_path(self):
         file_path = filedialog.askopenfilename()
         return file_path
-
+    
+    # def plot(self, y, data):
+    #     fig, ax = plt.subplots(figsize=(5,5), dpi=100)
+    #     ax.plot(y, linewidth=1)
+    #     ax.plot(data.iloc[:,1], linewidth=1)
+    #     ax.plot(data.iloc[:,2], linewidth=1)
+    #     ax.plot(data.iloc[:,3], linewidth=1)
+    #     self.canvas = FigureCanvasTkAgg(fig, master = self.window)
+    #     self.canvas.draw()
+        
+    #     # placing the canvas on the Tkinter window
+    #     self.canvas.get_tk_widget().place(x=350, y=150, height=350, width=500)
+    def plot(self, labels, data):
+        colour = []
+        for i in range(len(data) - len(labels)):
+            colour.append("red")
+        for x in labels:
+            if x == 1:
+                colour.append("blue")
+            else:
+                colour.append("red")
+        print(labels)
+        print(labels.dtype)
+        x = range(len(data))
+        fig, ax = plt.subplots(figsize=(5,5), dpi=100)
+        ax.scatter(x, data.iloc[:,1], linewidth=1, c=colour, s=1)
+        ax.scatter(x, data.iloc[:,2], linewidth=1, c=colour, s=1)
+        ax.scatter(x, data.iloc[:,3], linewidth=1, c=colour, s=1)
+        self.canvas = FigureCanvasTkAgg(fig, master = self.window)
+        self.canvas.draw()
+        
+        # placing the canvas on the Tkinter window
+        self.canvas.get_tk_widget().place(x=350, y=150, height=350, width=500)
+            
     # define start
     def start(self):
         # define input
@@ -55,20 +94,14 @@ class GUI:
         if not input_path:
             return
         data = pd.read_csv(input_path)
-        print(data)
-        # path = self.info.get()
-        # # check path
-        # if not os.path.exists(path):
-        #     messagebox.showinfo("File does not exist")
-        #     return
-        # # read csv file
-        # # path = ?
-        # # data = pd.read_csv(path)
-        # # then do the rest of step7
+        prediction = model.predict(preprocessing_features(data).features)
+        prob = model.predict_proba(preprocessing_features(data).features)
+        self.plot(prediction, data)
+        print(prob)
+        # fig, ax = plt.subplots(figsize=(10,10))
+        # ax.plot(prediction, linewidth=5)
+        # plt.show()
 
-    # define clear
-    # def clear(self):
-    #     self.info.delete('1.0', tk.END)
 
     # define closing
     def on_closing(self):
@@ -81,5 +114,7 @@ class GUI:
                                        "and generate a CSV file as the output")
 
 
-
+model = joblib.load('E:\\Desktop\\390\\ELEC-390-Project\\log_reg_model.pkl')
+with open('E:\\Desktop\\390\\ELEC-390-Project\\preprocessing_features.pkl', 'rb') as file:
+    preprocessing_features = pickle.load(file)
 GUI()

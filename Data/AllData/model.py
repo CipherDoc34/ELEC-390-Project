@@ -20,16 +20,11 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.inspection import DecisionBoundaryDisplay
 from sklearn.decomposition import PCA
 from sklearn.ensemble import RandomForestClassifier
-import data_extracting_features as de
-import data_pre_processing as dpp
-import data_visualization as dv
-import data_processing as dp
-import data_classifier as dc
 import joblib
 import numpy as np
 #%%
 
-with h5py.File("alldata.h5", "r") as f:
+with h5py.File("E:\\Desktop\\390\\ELEC-390-Project\\Data\\AllData\\alldata.h5", "r") as f:
     test = pd.DataFrame(f["dataset"]["Test"])
     train = pd.DataFrame(f["dataset"]["Train"])
 
@@ -48,6 +43,8 @@ data = pd.concat([test,train])
 data = data.loc[data[6] >= 2]
 #%%
 labels = data.iloc[:, -1]
+labels = labels.replace(2,0)
+labels = labels.replace(3,1)
 X = data.iloc[:, 2:-2]
 
 #%%
@@ -65,14 +62,13 @@ features = pd.DataFrame(columns=['meanX', 'meanY', 'meanZ',
 
 window_size = 500
 
-mean = X.rolling(window=window_size).mean()
 #%%
 def difference(x):
     return x.iloc[-1] - x.iloc[0]
 def difference_abs(x):
     return abs(x.iloc[-1] - x.iloc[0])
 
-
+mean = X.rolling(window=window_size).mean()
 std = X.rolling(window=window_size).std()
 max = X.rolling(window=window_size).max()
 min = X.rolling(window=window_size).min()
@@ -103,22 +99,24 @@ features = features.dropna()
 X_train, X_test, y_train, y_test = \
     train_test_split(features, labels[-len(features):], test_size = 0.3, shuffle=False, random_state=0)
 #%%
-X_train, X_test, y_train, y_test = \
-    train_test_split(X, labels, test_size = 0.3, shuffle=False, random_state=0)
+# X_train, X_test, y_train, y_test = \
+#     train_test_split(X, labels, test_size = 0.3, shuffle=False, random_state=0)
 #%%
 scaler = StandardScaler()
 l_reg = LogisticRegression(max_iter=10000)
 clf = make_pipeline(StandardScaler(), l_reg)
 
 #%%
-scaler = StandardScaler()
-clf = RandomForestClassifier(n_estimators=100)
+# scaler = StandardScaler()
+# clf = RandomForestClassifier(n_estimators=100)
 #%%
 
 clf.fit(X_train, y_train)
 
 y_pred = clf.predict(X_test)
 y_clf_prob = clf.predict_proba(X_test)
+X_pred = clf.predict(X_train)
+X_pred_prob = clf.predict_proba(X_train)
 
 #%%
 print("y_pred is: ", y_pred)
@@ -127,6 +125,11 @@ print('y_clf_prob is: ', y_clf_prob)
 acc = accuracy_score(y_test, y_pred)
 print("accuracy is: ", acc)
 
+print("X_pred is: ", X_pred)
+print('X_pred_prob is: ', X_pred_prob)
+
+acc_X = accuracy_score(y_train, X_pred)
+print("accuracy is: ", acc_X)
 # recall = recall_score(y_test, y_pred)
 # print('recall is: ', recall)
 
@@ -145,3 +148,6 @@ auc = roc_auc_score(y_test, y_clf_prob[:,1])
 print("the AUC is: ", auc)
 #%%
 joblib.dump(clf, 'log_reg_model.pkl')
+#%%
+
+
