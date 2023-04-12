@@ -66,8 +66,8 @@ class GUI:
     #     self.canvas.get_tk_widget().place(x=350, y=150, height=350, width=500)
     def plot(self, labels, data):
         colour = []
-        for i in range(len(data) - len(labels)):
-            colour.append("red")
+        # for i in range(len(data) - len(labels)):
+        #     colour.append("red")
         for x in labels:
             if x == 1:
                 colour.append("blue")
@@ -75,11 +75,11 @@ class GUI:
                 colour.append("red")
         print(labels)
         print(labels.dtype)
-        x = range(len(data))
+        x = range(len(labels))
         fig, ax = plt.subplots(figsize=(5,5), dpi=100)
-        ax.scatter(x, data.iloc[:,1], linewidth=1, c=colour, s=1)
-        ax.scatter(x, data.iloc[:,2], linewidth=1, c=colour, s=1)
-        ax.scatter(x, data.iloc[:,3], linewidth=1, c=colour, s=1)
+        ax.scatter(x, data.iloc[-len(labels):,1], linewidth=1, c=colour, s=1)
+        ax.scatter(x, data.iloc[-len(labels):,2], linewidth=1, c=colour, s=1)
+        ax.scatter(x, data.iloc[-len(labels):,3], linewidth=1, c=colour, s=1)
         self.canvas = FigureCanvasTkAgg(fig, master = self.window)
         self.canvas.draw()
         
@@ -111,7 +111,8 @@ class GUI:
     # define text
     def message(self):
         messagebox.showinfo("Message", "this app will accept an input file in CSV format "
-                                       "and generate a CSV file as the output")
+                                       "and generate a CSV file as the output"
+                                       "in the plot red represents walking and blue is jumping")
 
 
 model = joblib.load('E:\\Desktop\\390\\ELEC-390-Project\\log_reg_model.pkl')
