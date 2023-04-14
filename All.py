@@ -1,9 +1,4 @@
 # -*- coding: utf-8 -*-
-"""
-Created on Wed Apr 12 13:17:36 2023
-
-@author: Keshav
-"""
 import h5py
 import pandas as pd
 import matplotlib.pyplot as plt
